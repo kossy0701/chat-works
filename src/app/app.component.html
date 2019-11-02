@@ -20,6 +20,15 @@
         </div>
       </div>
       </ng-container>
+      <div class="media">
+        <div class="media-left">
+          <a href="#" class="icon">{{(item | async)?.initial}}</a>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading">{{(item | async)?.user.name}}</h4>
+          <div>{{(item | async)?.content}}</div>
+        </div>
+      </div>
     </div>
   </section>
 
