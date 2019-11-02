@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Comment } from './class/comment';
 import { User } from './class/user';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 const CURRENT_USER: User = new User(1, '田中太郎');
 const ANOTHER_USER: User = new User(2, '山田二郎');
@@ -18,13 +20,22 @@ const COMMENTS: Comment[] = [
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  comments =  COMMENTS;
-  currentUser = CURRENT_USER;
-  content = '';
+  item: Observable<Comment>;
+  public content = '';
+  public comments =  COMMENTS;
+  public currentUser = CURRENT_USER;
 
-  addComment(comment: string): void{
+  constructor(db: AngularFirestore) {
+    this.item = db
+    .collection('comments')
+    .doc<Comment>('item')
+    .valueChanges();
+  }
+
+  addComment(comment: string): void {
     if (comment) {
       this.comments.push(new Comment(this.currentUser, comment));
+      this.content = '';
     }
   }
 }
