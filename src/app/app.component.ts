@@ -3,16 +3,9 @@ import { Comment } from './class/comment';
 import { User } from './class/user';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 const CURRENT_USER: User = new User(1, '田中太郎');
-const ANOTHER_USER: User = new User(2, '山田二郎');
-
-const COMMENTS: Comment[] = [
-  new Comment(ANOTHER_USER, 'お疲れ様です！'),
-  new Comment(ANOTHER_USER, '寒いっすね'),
-  new Comment(CURRENT_USER, 'キンタマが縮むな'),
-  new Comment(ANOTHER_USER, 'タマヒュンですね'),
-];
 
 @Component({
   selector: 'app-root',
@@ -20,22 +13,65 @@ const COMMENTS: Comment[] = [
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  item: Observable<Comment>;
-  public content = '';
-  public comments =  COMMENTS;
+  public message = '';
+  public comments: Observable<Comment[]>;
   public currentUser = CURRENT_USER;
 
-  constructor(db: AngularFirestore) {
-    this.item = db
-    .collection('comments')
-    .doc<Comment>('item')
-    .valueChanges();
+  constructor(private db: AngularFirestore) {
+    this.comments = db
+    .collection<Comment>('comments', ref => {
+      return ref.orderBy('date', 'asc');
+    })
+    .snapshotChanges()
+    .pipe(
+      map(actions => actions.map(action => {
+        const data = action.payload.doc.data() as Comment;
+        const key = action.payload.doc.id;
+        const commentData = new Comment(data.user, data.message);
+        commentData.setData(data.date, key);
+        return commentData;
+      })));
   }
 
-  addComment(comment: string): void {
+  addComment(e: Event, comment: string) {
+    e.preventDefault();
     if (comment) {
-      this.comments.push(new Comment(this.currentUser, comment));
-      this.content = '';
+      this.db
+        .collection('comments')
+        .add(new Comment(this.currentUser, comment).deserialize());
+      this.message = '';
     }
+  }
+
+  toggleEditComment(comment: Comment) {
+    comment.editFlag = (!comment.editFlag);
+  }
+
+  saveEditComment(comment: Comment) {
+    this.db
+      .collection('comments')
+      .doc(comment.key)
+      .update({
+        message: comment.message,
+        date: comment.date
+      })
+      .then(() => {
+        alert('コメントを更新しました。');
+        comment.editFlag = false;
+      });
+  }
+
+  resetEditComment(comment: Comment) {
+    comment.message = '';
+  }
+
+  deleteComment(key: string) {
+    this.db
+      .collection('comments')
+      .doc(key)
+      .delete()
+      .then(() => {
+        alert('コメントを削除しました。');
+      });
   }
 }

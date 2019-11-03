@@ -6,4 +6,8 @@ export class User {
     this.uid = uid;
     this.name = name;
   }
+
+  deserialize() {
+    return Object.assign({}, this);
+  }
 }
