@@ -1,14 +1,13 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { format } from 'date-fns';
-import { ja } from 'date-fns/locale';
+import * as moment from 'moment';
 
 @Pipe({
   name: 'commentDate'
 })
 export class CommentDatePipe implements PipeTransform {
 
-  transform(date: Date): any {
-    return format(date, 'yyyy年MM月dd日 HH:mm:ss', { locale: ja });
+  transform(date: number): string {
+    moment.locale('ja');
+    return moment(date).format('LLLL');
   }
-
 }
