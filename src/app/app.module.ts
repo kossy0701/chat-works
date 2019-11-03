@@ -10,11 +10,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './shared/shared.module';
 import { ChatComponent } from './chat/chat.component';
 import { AppComponent } from './app.component';
+import { PageNotFoundComponent } from './error/page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ChatComponent
+    ChatComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
