@@ -1,9 +1,9 @@
-<nav class="navbar fixed-top navbar-dark bg-primary">
-  <a class="navbar-brand" href="#">ChatWorks</a>
-  <span class="navbar-text" *ngIf="!login">
+<mat-toolbar color="accent" class="navbar fixed-top">
+  <a href="/">ChatWorks</a>
+  <button mat-raised-button *ngIf="!login">
     <a routerLink="/account/login">Login</a>
-  </span>
-  <span class="navbar-text" *ngIf="login">
+  </button>
+  <button mat-raised-button *ngIf="login">
     <a routerLink="/account/login" (click)="logout()">Logout</a>
-  </span>
-</nav>
+  </button>
+</mat-toolbar>
