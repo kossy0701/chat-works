@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { SessionService } from '../../core/service/session.service';
+import { Password } from '../../class/user';
 
 @Component({
   selector: 'app-login',
@@ -9,13 +10,17 @@ import { SessionService } from '../../core/service/session.service';
 })
 export class LoginComponent implements OnInit {
 
+  public account = new Password();
+  public hide = true;
+
   constructor(private sessionService: SessionService) { }
 
   ngOnInit() {
   }
 
-  submitLogin() {
-    this.sessionService.login();
+  submitLogin(e: Event) {
+    e.preventDefault();
+    this.sessionService.login(this.account);
   }
 
 }
