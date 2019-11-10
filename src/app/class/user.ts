@@ -25,3 +25,21 @@ export class Session {
   }
 
 }
+
+export class Password {
+  email: string;
+  password: string;
+  passwordConfirmation: string;
+
+  constructor() {
+    this.email = '';
+    this.password = '';
+    this.passwordConfirmation = '';
+  }
+
+  reset(): void {
+    this.email = '';
+    this.password = '';
+    this.passwordConfirmation = '';
+  }
+}
