@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 import { Session, Password } from '../../class/user';
@@ -58,5 +59,25 @@ export class SessionService {
             console.log(err);
             alert('アカウントの作成に失敗しました。\n' + err);
           });
+  }
+
+  checkLogin(): void {
+    this.angularFireAuth
+      .authState
+      .subscribe(auth => {
+        this.session.login = (!!auth);
+        this.sessionSubject.next(this.session);
+      });
+  }
+
+  checkLoginState(): Observable<Session> {
+    return this.angularFireAuth
+      .authState
+      .pipe(
+        map(auth => {
+          this.session.login = (!!auth);
+          return this.session;
+        })
+      );
   }
 }
