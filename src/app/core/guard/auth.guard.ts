@@ -24,6 +24,6 @@ export class AuthGuard implements CanActivate {
           }
           return session.login;
         })
-      )
+      );
   }
 }

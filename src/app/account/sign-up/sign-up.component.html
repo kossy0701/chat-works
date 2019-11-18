@@ -6,6 +6,9 @@
       <mat-card-content>
         <form (ngSubmit)="submitSignUp($event)" class="signUp-form" #signUpForm="ngForm">
           <mat-form-field>
+            <input matInput placeholder="Name" id="inputName" [(ngModel)]="account.name" name="name" #name="ngModel" autocomplete="username" required autofocus>
+          </mat-form-field>
+          <mat-form-field>
             <input matInput placeholder="Email Address" id="inputEmail" [(ngModel)]="account.email" name="email" #email="ngModel" autocomplete="username email" required autofocus>
           </mat-form-field>
           <mat-form-field>

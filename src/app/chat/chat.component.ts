@@ -1,12 +1,19 @@
+// core
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+
+// class
 import { User } from '../class/user';
 import { Comment } from '../class/comment';
+
+// FireBase
 import { AngularFirestore } from '@angular/fire/firestore';
+
+// RxJs
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-const CURRENT_USER: User = new User(1, 'Tanaka Jiro');
-const ANOTHER_USER: User = new User(2, 'Suzuki Taro');
+// Service
+import { SessionService } from '../core/service/session.service';
 
 @Component({
   selector: 'app-chat',
@@ -17,9 +24,13 @@ export class ChatComponent implements OnInit {
 
   public message = '';
   public comments: Observable<Comment[]>;
-  public currentUser = CURRENT_USER;
+  public currentUser: User;
 
-  constructor(private db: AngularFirestore) { }
+  constructor(private db: AngularFirestore, private session: SessionService) {
+    this.session.sessionState.subscribe(data => {
+      this.currentUser = data.user;
+    });
+   }
 
   ngOnInit() {
     this.comments = this.db
